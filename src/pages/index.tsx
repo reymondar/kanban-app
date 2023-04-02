@@ -1,12 +1,33 @@
 import * as React from "react"
 import { StaticImage } from "gatsby-plugin-image"
-import { useState } from "react"
+import { useState , useReducer} from "react"
 import Sidebar from "../components/Sidebar"
 import Display from "../components/Display"
 import TopBar from "../components/TopBar"
 
+
+
+const reducer = (board, action) => {
+}
+
+const initialState = ():Array<String> => {
+  const boards: string | null = localStorage.getItem('boards')
+  if(boards){
+  const boardsArr = JSON.parse(boards)
+  return boardsArr
+}
+  else {
+    return []
+  }
+}
+
+
+
+
+
 const IndexPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true)
+  const [boards, dispatch] = useReducer(reducer, initialState)
 
   const handleClick = () => {
     setSidebarVisible(prev => !prev)

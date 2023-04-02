@@ -12,7 +12,7 @@ export default function Sidebar({ setSideBar }) {
           </p>
           <button className="flex w-full text-gray-400 font-semibold px-2 py-3 border-solid rounded-r-3xl active:bg-main-violet active:text-white hover:cursor-pointer">
             <StaticImage
-              src="../assets/icon-board.svg"
+              src="../ass"
               className="self-center mx-4"
             />
             Platform Launch
