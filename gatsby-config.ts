@@ -14,7 +14,9 @@ const config: GatsbyConfig = {
     options: {
       "icon": "src/images/icon.png"
     }
-  }]
+  },
+  'gatsby-plugin-image'
+]
 };
 
 export default config;
