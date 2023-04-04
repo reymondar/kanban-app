@@ -3,7 +3,7 @@ import React , { useReducer } from 'react'
 
 type addBoardProps = {
     setModal: (o: boolean | ((prev: boolean) => boolean)) => void
-    boardDispatch: (o: {type: string, payload: State}) => void
+    boardDispatch: (o: {boardID: string, type: string, payload: State}) => void
 }
 
 type State = {
@@ -70,6 +70,7 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
     const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLDivElement
         if(target.id === 'container') return setModal((prev: boolean) => !prev)
+        //dispatch({type: "CLEAR_DATA"})
     }
 
     const handleAdd = () => dispatch({type: "ADD_COLUMN", 'payload': ''})
@@ -84,7 +85,9 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
     const handleBoardTitle = (e:React.ChangeEvent<HTMLInputElement>) => dispatch({type: "ADD_TITLE", payload: e.target.value})
     
     const handleBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
-        boardDispatch({'type':'new board', 'payload': state})
+        console.log(state.title)
+        boardDispatch({'type':"NEW_BOARD", boardID: state.title ,'payload': state})
+        
         dispatch({type:"CLEAR_DATA"}) 
         setModal(prev => !prev)
     }

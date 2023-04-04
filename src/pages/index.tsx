@@ -6,23 +6,34 @@ import Display from "../components/Display"
 import TopBar from "../components/TopBar"
 
 
-type Actions = {
-  type: string,
-  payload: string[]
-}
+type State = {
+  [boardID: string]: {
+    title: string,
+    tasks: string[]
+  }
+} 
 
-const reducer = (boards: Object[], action: Actions) => {
+type Actions = 
+  | {type: "NEW_BOARD", payload: {boardID:string, title: string, tasks: string[]} }
+
+const reducer = (state: State, action: Actions): State => {
   switch(action.type) {
-    case "new board": {
-      if(boards.length) return [...boards, {'title': action.payload[0], 'taks': action.payload[1]}]
-      else return [{'title': action.payload[0], 'taks': action.payload[1]}]
+    case "NEW_BOARD": {
+      const { boardID , title , tasks} = action.payload;
+      return {
+        ...state,
+          [boardID]: {
+          title,
+          tasks
+        }
+      }
     }
     default: 
-      return []
+      return state
   }
 }
 
-const initialState = ():Array<String> => {
+const initialState = () => {
   const boards: string | null = localStorage.getItem('boards')
   if(boards){
   const boardsArr = JSON.parse(boards)
@@ -38,7 +49,9 @@ const initialState = ():Array<String> => {
 
 const IndexPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true)
-  const [boards, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, {})
+
+  const stateArray = Object.values(state)
 
   const handleClick = () => {
     setSidebarVisible(prev => !prev)
@@ -56,7 +69,7 @@ const IndexPage = () => {
         <TopBar />
         <div className="flex h-full">
           {sidebarVisible ? (
-            <Sidebar setSideBar={setSidebarVisible} boards={boards} dispatch={dispatch} />
+            <Sidebar setSideBar={setSidebarVisible} boards={state} dispatch={dispatch} />
           ) : (
             <div
               onClick={handleClick}
