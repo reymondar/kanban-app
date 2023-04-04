@@ -1,43 +1,63 @@
 import { StaticImage } from 'gatsby-plugin-image'
-import React , { useReducer , useState } from 'react'
-
+import React , { useReducer } from 'react'
 
 type addBoardProps = {
     setModal: (o: boolean | ((prev: boolean) => boolean)) => void
-    boardDispatch: () => void
+    boardDispatch: (o: {type: string, payload: State}) => void
 }
 
-
-type State = (string | undefined)[]
-
-type Action = {
-    type: string,
-    payload: string,
-    value?: string
+type State = {
+    title: string,
+    tasks: string[]
 }
 
-const initialState: State = ['']
+type Action = 
+    | {type: "ADD_COLUMN", payload: string}
+    | {type: "ADD_TITLE", payload: string}
+    | {type: "MODIFY_COLUMN", payload: string, value: string}
+    | {type: "DELETE_COLUMN", payload: string}
+    | {type: "CLEAR_DATA"}
 
-const reducer = (tasks: string[], action: Action): State => {
+const initialState: State = {title: '', tasks: []}
+
+const reducer = (state: State, action: Action): State => {
     switch(action?.type){ 
-        case "add": {
-           return [...tasks, '']
+        case "ADD_COLUMN": {
+            return {
+                ...state,
+                tasks: [...state.tasks , action.payload]
+            }
         }
-        case "modify": {
+        case "ADD_TITLE" : {
+            return {
+                ...state,
+                title: action.payload
+            }
+        }
+        case "MODIFY_COLUMN": {
            const index = Number(action.payload)
-           return tasks.map((input,i) => {
+           return {
+            ...state,
+            tasks:  state.tasks.map((input,i) => {
                 if(i == index) return action.value
                 else return input
             })
+           }
         }
-        case "delete": {
-            return tasks.filter((el,i) => i !== Number(action.payload))
+        case "DELETE_COLUMN": {
+            return {
+                ...state,
+                tasks: state.tasks.filter((el,i) => i !== Number(action.payload))
+            }  
         }
-        case 'clear': {
-            return []
+        case "CLEAR_DATA": {
+            return {
+                title: '',
+                tasks: ['']
+            }
         }
         default: {
-            return tasks
+            return state
         }
     }
 }
@@ -45,29 +65,28 @@ const reducer = (tasks: string[], action: Action): State => {
 
 const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
 
-    const [title, setTitle] = useState<string>("")
-    const [tasks, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
-        if(e.target?.id === 'container') return setModal((prev: boolean) => !prev)
+        const target = e.target as HTMLDivElement
+        if(target.id === 'container') return setModal((prev: boolean) => !prev)
     }
 
-    const handleAdd = () => dispatch({type: 'add', 'payload': []})
+    const handleAdd = () => dispatch({type: "ADD_COLUMN", 'payload': ''})
     
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => dispatch({type: 'modify', payload: e.target.name, value: e.target.value})
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => dispatch({type: "MODIFY_COLUMN", payload: e.target.name, value: e.target.value})
     
     const handleClick = (e: React.MouseEvent<HTMLImageElement>) => {
-        if(e.target?.tagName == "IMG") dispatch({"type": "delete", 'payload': e.currentTarget.id})
+        const target = e.target as HTMLImageElement
+        if(target.tagName == "IMG") dispatch({"type": "DELETE_COLUMN", 'payload': e.currentTarget.id})
     }
 
-    const handleBoardTitle = (e:React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)
+    const handleBoardTitle = (e:React.ChangeEvent<HTMLInputElement>) => dispatch({type: "ADD_TITLE", payload: e.target.value})
     
     const handleBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
-        boardDispatch({'type':'new board', 'payload': [title, tasks]})
-        dispatch({type:'clear', payload: []})
-        
+        boardDispatch({'type':'new board', 'payload': state})
+        dispatch({type:"CLEAR_DATA"}) 
         setModal(prev => !prev)
-        setTitle('')
     }
 
     return(
@@ -80,11 +99,11 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
                 className='w-full rounded-md p-2 border-solid border-slate-400 b-1 border-2' 
                 placeholder="e.g. web design"
                 onChange={handleBoardTitle}
-                value={title} />
+                value={state.title} />
             </div>
             <div>
                 <p className="mt-4 text-light-gray font-semibold">Columns</p>
-                {tasks.map(( text: string, i: number ) => {
+                {state.tasks.map(( text: string, i: number ) => {
                     return (
                     <div key={`${i}3`} id={`${i}`} className="flex place-content-center w-full mt-4" onClick={handleClick}>
                         <input className="w-full rounded-md p-2 border-solid border-slate-400 b-1 border-2" 
