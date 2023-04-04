@@ -40,10 +40,6 @@ const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
 
   const handleClick = () => setSideBar()
 
-  // const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   dispatch({type: 'addBoard', payload: 'e'})
-  // }
-
   return (
     <>
       <div className="flex flex-col justify-between w-full md:w-1/3 lg:w-1/6  h-90% py-10 pr-4 box-border border-solid border-r-2 border-white-gray z-10">

@@ -1,6 +1,12 @@
 import React from "react"
 
-export default function TaskColumn({ title, subtasks }) {
+//modify
+type columns = {
+  title: string,
+  subtasks: string
+}
+
+export default function TaskColumn({ title, subtasks }: columns) {
   return (
     <div>
       <h1 className="font-semibold tracking-wider text-light-gray mb-6">

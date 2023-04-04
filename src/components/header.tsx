@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link } from "gatsby"
 
-const Header = ({ siteTitle }) => (
+const Header = () => (
   <header
     style={{
       margin: `0 auto`,
@@ -18,7 +18,7 @@ const Header = ({ siteTitle }) => (
         textDecoration: `none`,
       }}
     >
-      {siteTitle}
+      KanBan
     </Link>
   </header>
 )

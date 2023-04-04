@@ -14,6 +14,7 @@ export default function TopBar() {
         <StaticImage
           src="../assets/icon-vertical-ellipsis.svg"
           className="self-center mx-4 hover:cursor-pointer"
+          alt="logo"
         />
       </div>
     </div>

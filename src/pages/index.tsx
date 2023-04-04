@@ -26,10 +26,12 @@ const initialState = ():Array<String> => {
   const boards: string | null = localStorage.getItem('boards')
   if(boards){
   const boardsArr = JSON.parse(boards)
-  return boardsArr
+  return {
+    boardsArr
+  }
 }
   else {
-    return []
+    return {}
   }
 }
 
