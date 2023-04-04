@@ -6,8 +6,20 @@ import Display from "../components/Display"
 import TopBar from "../components/TopBar"
 
 
+type Actions = {
+  type: string,
+  payload: string[]
+}
 
-const reducer = (board, action) => {
+const reducer = (boards: Object[], action: Actions) => {
+  switch(action.type) {
+    case "new board": {
+      if(boards.length) return [...boards, {'title': action.payload[0], 'taks': action.payload[1]}]
+      else return [{'title': action.payload[0], 'taks': action.payload[1]}]
+    }
+    default: 
+      return []
+  }
 }
 
 const initialState = ():Array<String> => {
@@ -22,9 +34,6 @@ const initialState = ():Array<String> => {
 }
 
 
-
-
-
 const IndexPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true)
   const [boards, dispatch] = useReducer(reducer, initialState)
@@ -35,15 +44,17 @@ const IndexPage = () => {
 
   return (
     <>
-      <div className="h-screen max-h-full">
+    <React.StrictMode>
+      <div className="h-screen overflow-hidden">
         <StaticImage
           src="../assets/logo-dark.svg"
+          alt="boards"
           className="absolute md:top-7 md:left-7"
         />
         <TopBar />
         <div className="flex h-full">
           {sidebarVisible ? (
-            <Sidebar setSideBar={setSidebarVisible} />
+            <Sidebar setSideBar={setSidebarVisible} boards={boards} dispatch={dispatch} />
           ) : (
             <div
               onClick={handleClick}
@@ -51,13 +62,15 @@ const IndexPage = () => {
             >
               <StaticImage
                 src="../assets/icon-hide-sidebar.svg"
+                alt="boards"
                 className="fill-white"
               />
             </div>
           )}
-          <Display />
+          <Display dispatch={dispatch} />
         </div>
       </div>
+      </React.StrictMode>
     </>
   )
 }

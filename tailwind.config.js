@@ -6,6 +6,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      width: {
+        "104": "30rem"
+      },
+      height: {
+        "102": "27rem"
+      },
       spacing: {
         "10%": "10%",
         "70%": "70%",
@@ -20,6 +26,7 @@ module.exports = {
         "semi-black": "#2B2C37",
         "dark-gray": "#3E3F4E",
         "light-gray": "#828FA3",
+        "light-gray-op": "#00000080",
         "white-azure": "#E4EBFA",
         "s-l-gray": "#AFB6B9",
         "gray-white": "#F4F7FD",
