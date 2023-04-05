@@ -70,7 +70,7 @@ const IndexPage = () => {
               />
             </div>
           )}
-          <Display dispatch={dispatch} />
+          <Display boards={stateArray} dispatch={dispatch} />
         </div>
       </div>
       </React.StrictMode>
