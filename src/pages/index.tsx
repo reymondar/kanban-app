@@ -5,9 +5,8 @@ import Sidebar from "../components/Sidebar"
 import Display from "../components/Display"
 import TopBar from "../components/TopBar"
 
-
 type State = {
-  [boardID: string]: {
+  [title: string]: {
     title: string,
     tasks: string[]
   }
@@ -19,10 +18,10 @@ type Actions =
 const reducer = (state: State, action: Actions): State => {
   switch(action.type) {
     case "NEW_BOARD": {
-      const { boardID , title , tasks} = action.payload;
+      const { title , tasks} = action.payload;
       return {
         ...state,
-          [boardID]: {
+          [title]: {
           title,
           tasks
         }
@@ -33,26 +32,15 @@ const reducer = (state: State, action: Actions): State => {
   }
 }
 
-const initialState = () => {
-  const boards: string | null = localStorage.getItem('boards')
-  if(boards){
-  const boardsArr = JSON.parse(boards)
-  return {
-    boardsArr
-  }
-}
-  else {
-    return {}
-  }
-}
-
+const initialState = JSON.parse(localStorage.getItem('boards') ?? "null") ?? {}
 
 const IndexPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true)
-  const [state, dispatch] = useReducer(reducer, {})
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const stateArray = Object.values(state)
 
+  console.log(stateArray)
   const handleClick = () => {
     setSidebarVisible(prev => !prev)
   }
@@ -69,7 +57,7 @@ const IndexPage = () => {
         <TopBar />
         <div className="flex h-full">
           {sidebarVisible ? (
-            <Sidebar setSideBar={setSidebarVisible} boards={state} dispatch={dispatch} />
+            <Sidebar setSideBar={setSidebarVisible} boards={stateArray} dispatch={dispatch} />
           ) : (
             <div
               onClick={handleClick}

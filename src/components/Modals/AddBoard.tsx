@@ -3,7 +3,7 @@ import React , { useReducer } from 'react'
 
 type addBoardProps = {
     setModal: (o: boolean | ((prev: boolean) => boolean)) => void
-    boardDispatch: (o: {boardID: string, type: string, payload: State}) => void
+    boardDispatch: (o: {type: string, payload: State}) => void
 }
 
 type State = {
@@ -86,7 +86,7 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
     
     const handleBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
         console.log(state.title)
-        boardDispatch({'type':"NEW_BOARD", boardID: state.title ,'payload': state})
+        boardDispatch({'type':"NEW_BOARD",'payload': state})
         
         dispatch({type:"CLEAR_DATA"}) 
         setModal(prev => !prev)

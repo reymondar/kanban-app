@@ -2,26 +2,24 @@ import React , { useState } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import AddBoard from "./Modals/AddBoard"
 
-type appBoards = {
-  title: string,
-  tasks: string[]
-}
 
 type SidebarProps = {
   setSideBar: () => void,
-  boards: appBoards[],
-  dispatch: () => void
+  boards: {title:string, tasks: string[]}[],
+  dispatch: (o: { type: string; payload: string}) => void
 }
 
 type BoardBtnProps = {
   title: string,
-  onClick: () => void
+  name: string,
+  onClick: (e: EventTarget) => void
 }
 
-const BoardBtn = ({title, onClick}: BoardBtnProps) => {
+const BoardBtn = ({title, name , onClick}: BoardBtnProps) => {
   return (
     <button className="flex w-full text-gray-400 font-semibold px-2 py-3 border-solid rounded-r-3xl active:bg-main-violet active:text-white hover:cursor-pointer"
             onClick={onClick}
+            name={name}
     >
             <StaticImage
               src="../assets/icon-board.svg"
@@ -38,17 +36,20 @@ const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
  
   const [modal, setModal] = useState<boolean>(false)
 
-  const handleClick = () => setSideBar()
+  const handleClick = (e) => {
+    console.log(e.target.name)
+  }
 
   return (
     <>
       <div className="flex flex-col justify-between w-full md:w-1/3 lg:w-1/6  h-90% py-10 pr-4 box-border border-solid border-r-2 border-white-gray z-10">
         <div>
           <p className="text-gray-400 text-xs tracking-widest font-semibold ml-6">
-            ALL BOARDS ( {boards?.length} )
+            ALL BOARDS ( {boards.length} )
           </p>
-          {boards?.length >= 1 && boards.map(board => {
-            return <BoardBtn title={board.title} onClick={handleClick} />
+          {boards?.length > 0 && boards.map((board) => {
+            console.log(board)
+            return <BoardBtn title={board.title} name={board.title} onClick={handleClick} />
           })}
           <BoardBtn title="+ Create New Board" onClick={() => setModal(prev => !prev)} />
         </div>
@@ -70,7 +71,7 @@ const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
             />
           </div>
           <button
-            onClick={handleClick}
+            onClick={() => setSideBar()}
             className="flex w-full text-gray-400 font-semibold px-2  py-3 border-solid rounded-r-3xl active:bg-violet-800 active:text-white hover:cursor-pointer"
           >
             <StaticImage
