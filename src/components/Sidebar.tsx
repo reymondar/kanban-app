@@ -1,7 +1,7 @@
-import React , { useState } from "react"
+import React , { useState , useContext } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import AddBoard from "./Modals/AddBoard"
-
+import { BoardContext } from "../context/BoardContext"
 
 type SidebarProps = {
   setSideBar: () => void,
@@ -32,9 +32,12 @@ const BoardBtn = ({title, name , onClick}: BoardBtnProps) => {
 }
 
 
-const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
+const Sidebar = ({ setSideBar }: SidebarProps) => {
  
-  const [modal, setModal] = useState<boolean>(false)
+ const [modal, setModal] = useState<boolean>(false)
+ const boards = useContext(BoardContext)
+
+  const boardsArray = Object.values(boards)
 
   const handleClick = (e) => {
     console.log(e.target.name)
@@ -45,13 +48,12 @@ const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
       <div className="flex flex-col justify-between w-full md:w-1/3 lg:w-1/6  h-90% py-10 pr-4 box-border border-solid border-r-2 border-white-gray z-10">
         <div>
           <p className="text-gray-400 text-xs tracking-widest font-semibold ml-6">
-            ALL BOARDS ( {boards.length} )
+            ALL BOARDS ( {boardsArray.length} )
           </p>
-          {boards?.length > 0 && boards.map((board) => {
-            console.log(board)
+          {boardsArray?.length > 0 && boardsArray.map((board) => {
             return <BoardBtn title={board.title} name={board.title} onClick={handleClick} />
           })}
-          <BoardBtn title="+ Create New Board" onClick={() => setModal(prev => !prev)} />
+          <BoardBtn title="+ Create New Board" name="creator" onClick={() => setModal(prev => !prev)} />
         </div>
         <div>
           <div className="flex justify-center w-5/6 bg-white-azure rounded-lg py-2 m-auto my-4">
@@ -82,7 +84,7 @@ const Sidebar = ({ setSideBar , boards , dispatch }: SidebarProps) => {
             Hide Sidebar
           </button>
         </div>
-        {modal && <AddBoard setModal={setModal} boardDispatch={dispatch}  />}
+        {modal && <AddBoard setModal={setModal} />}
       </div>
     </>
   )

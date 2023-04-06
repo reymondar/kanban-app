@@ -6,7 +6,7 @@ type columns = {
   subtasks: string
 }
 
-export default function TaskColumn({ title, subtasks }: columns) {
+export default function Tasks({ title, subtasks }: columns) {
   return (
     <div>
       <h1 className="font-semibold tracking-wider text-light-gray mb-6">

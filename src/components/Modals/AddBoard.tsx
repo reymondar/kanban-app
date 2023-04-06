@@ -1,9 +1,9 @@
 import { StaticImage } from 'gatsby-plugin-image'
-import React , { useReducer } from 'react'
+import React , { useReducer , useContext } from 'react'
+import { BoardManagerContext } from '../../context/BoardContext'
 
 type addBoardProps = {
     setModal: (o: boolean | ((prev: boolean) => boolean)) => void
-    boardDispatch: (o: {type: string, payload: State}) => void
 }
 
 type State = {
@@ -63,9 +63,11 @@ const reducer = (state: State, action: Action): State => {
 }
 
 
-const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
+const AddBoard = ({ setModal }: addBoardProps) => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    const boardsState = useContext(BoardManagerContext)
 
     const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLDivElement
@@ -84,10 +86,8 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
 
     const handleBoardTitle = (e:React.ChangeEvent<HTMLInputElement>) => dispatch({type: "ADD_TITLE", payload: e.target.value})
     
-    const handleBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(state.title)
-        boardDispatch({'type':"NEW_BOARD",'payload': state})
-        
+    const handleBoard = () => {
+        if (boardsState) boardsState(({type:"NEW_BOARD",payload: {title: state.title,tasks: state.tasks}}))
         dispatch({type:"CLEAR_DATA"}) 
         setModal(prev => !prev)
     }
@@ -119,15 +119,18 @@ const AddBoard = ({setModal , boardDispatch }: addBoardProps) => {
                         />               
                     </div>)
                 })}
+                
                 <button 
                 className="w-full rounded-3xl p-2 my-4 bg-white-azure text-main-violet font-semibold"
                 onClick={handleAdd}
                 >+Add New Column</button>
-            </div> 
+              
+            </div>
             <button 
                 className="w-full rounded-3xl p-2 bg-main-violet text-white font-semibold"
                 onClick={handleBoard}
-                >Create New Board</button>
+                >Create New Board
+            </button>
         </div>
       </div>
     )
