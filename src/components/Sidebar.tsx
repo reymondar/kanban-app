@@ -1,18 +1,17 @@
-import React , { useState , useContext } from "react"
+import React , { useState , useContext, Dispatch, SetStateAction } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import AddBoard from "./Modals/AddBoard"
-import { BoardContext } from "../context/BoardContext"
+import { BoardContext , BoardManagerContext } from "../context/BoardContext"
 
 type SidebarProps = {
-  setSideBar: () => void,
-  boards: {title:string, tasks: string[]}[],
-  dispatch: (o: { type: string; payload: string}) => void
+  setSideBar: Dispatch<SetStateAction<boolean>>,
+  setBoard: Dispatch<SetStateAction<string>>
 }
 
 type BoardBtnProps = {
   title: string,
   name: string,
-  onClick: (e: EventTarget) => void
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const BoardBtn = ({title, name , onClick}: BoardBtnProps) => {
@@ -32,15 +31,16 @@ const BoardBtn = ({title, name , onClick}: BoardBtnProps) => {
 }
 
 
-const Sidebar = ({ setSideBar }: SidebarProps) => {
+const Sidebar = ({ setSideBar , setBoard }: SidebarProps) => {
  
  const [modal, setModal] = useState<boolean>(false)
  const boards = useContext(BoardContext)
 
   const boardsArray = Object.values(boards)
 
-  const handleClick = (e) => {
-    console.log(e.target.name)
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as HTMLButtonElement
+    setBoard(target.name)
   }
 
   return (
@@ -73,7 +73,7 @@ const Sidebar = ({ setSideBar }: SidebarProps) => {
             />
           </div>
           <button
-            onClick={() => setSideBar()}
+            onClick={() => setSideBar(prev => !prev)}
             className="flex w-full text-gray-400 font-semibold px-2  py-3 border-solid rounded-r-3xl active:bg-violet-800 active:text-white hover:cursor-pointer"
           >
             <StaticImage

@@ -5,11 +5,16 @@ import TopBar from "./TopBar"
 import Tasks from "./Tasks"
 import { BoardContext } from "../context/BoardContext"
 
+export default function Display() {
 
-export default function Display({boards , boardsManager}: any) {
-
-  console.log(boards, boardsManager)
+  const [board, setBoard] = useState<string>("")
   const [sidebarVisible, setSidebarVisible] = useState(true)
+
+  const Boards = useContext(BoardContext)
+
+  const BoardsArray = Object.values(Boards)
+
+  console.log(BoardsArray)
 
   return (
       <div className="h-screen overflow-hidden">
@@ -21,7 +26,7 @@ export default function Display({boards , boardsManager}: any) {
         <TopBar />
         <div className="flex h-full">
           {sidebarVisible ? (
-            <Sidebar setSideBar={setSidebarVisible} boardsManager={boardsManager} />
+            <Sidebar setSideBar={setSidebarVisible} setBoard={setBoard} />
           ) : (
             <div
               onClick={() => setSidebarVisible(prev => !prev)}
