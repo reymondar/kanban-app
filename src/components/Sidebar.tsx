@@ -1,7 +1,7 @@
 import React , { useState , useContext, Dispatch, SetStateAction } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import AddBoard from "./Modals/AddBoard"
-import { BoardContext , BoardManagerContext } from "../context/BoardContext"
+import { BoardContext } from "../context/BoardContext"
 
 type SidebarProps = {
   setSideBar: Dispatch<SetStateAction<boolean>>,
@@ -38,6 +38,7 @@ const Sidebar = ({ setSideBar , setBoard }: SidebarProps) => {
 
   const boardsArray = Object.values(boards)
 
+  console.log(boards)
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const target = e.target as HTMLButtonElement
     setBoard(target.name)
@@ -50,8 +51,8 @@ const Sidebar = ({ setSideBar , setBoard }: SidebarProps) => {
           <p className="text-gray-400 text-xs tracking-widest font-semibold ml-6">
             ALL BOARDS ( {boardsArray.length} )
           </p>
-          {boardsArray?.length > 0 && boardsArray.map((board) => {
-            return <BoardBtn title={board.title} name={board.title} onClick={handleClick} />
+          {boards?.length > 0 && boards.map((board,i) => {
+            return <BoardBtn key={i} title={board.title} name={board.title} onClick={handleClick} />
           })}
           <BoardBtn title="+ Create New Board" name="creator" onClick={() => setModal(prev => !prev)} />
         </div>

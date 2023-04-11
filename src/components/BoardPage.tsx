@@ -1,20 +1,24 @@
-import React, { useState , useContext } from "react"
+import React, { useState , useContext , useEffect } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import Sidebar from "./Sidebar"
 import TopBar from "./TopBar"
 import Tasks from "./Tasks"
 import { BoardContext } from "../context/BoardContext"
 
+type Items = {
+  title: string,
+  tasks: string[]
+}
+
 export default function Display() {
 
-  const [board, setBoard] = useState<string>("")
+  const [actualBoard, setBoard] = useState<string>("")
+  const [selectedBoard, setSelectedBoard] =useState<Items[]>([])
   const [sidebarVisible, setSidebarVisible] = useState(true)
 
   const Boards = useContext(BoardContext)
 
-  const BoardsArray = Object.values(Boards)
-
-  console.log(BoardsArray)
+  const [ board ] = Boards.filter(board => board.title === actualBoard)
 
   return (
       <div className="h-screen overflow-hidden">
@@ -40,7 +44,9 @@ export default function Display() {
             </div>
           )}
           <div className="w-full h-90% p-6 grid grid-cols-1-28 grid-row-1 auto-cols-1-28 grid-flow-col gap-x-6 overflow-x-scroll bg-white-azure">
-            <Tasks title="kit surf" subtasks="kit surfs" />
+            {board && board.tasks.map((task, i) => {
+              return <Tasks key={i} title={task} subtasks="" />
+            })}
             <div className="flex place-content-center place-items-center mt-10 bg-gray-white rounded-xl hover:cursor-pointer">    
               <p className="text-light-gray text-2xl font-bold">+ New Column</p>
             </div>

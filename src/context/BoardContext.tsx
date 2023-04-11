@@ -1,17 +1,12 @@
 import React, { useReducer } from 'react'
 
-interface BoardAction {
-  type: string,
-  payload: {title: string, tasks: string[]}
-}
+type stateBoards = {
+    title: string,
+    tasks: string[]
+  
+}  
 
-
-type State = {
-    [title: string]: {
-      title: string,
-      tasks: string[]
-    }
-  } 
+type State = stateBoards[]
   
 type Actions = 
 | {type: "NEW_BOARD", payload: {title: string, tasks: string[]} }
@@ -20,13 +15,12 @@ const reducer = (boards: State = initialState, action: Actions): State => {
 switch(action.type) {
     case "NEW_BOARD": {
     const { title , tasks} = action.payload;
-    return {
-        ...boards,
-        [title]: {
+    return [
+      ...boards,
+      {
         title,
         tasks
-        }
-    }
+    }]
     }
     default: 
     return boards
@@ -34,7 +28,7 @@ switch(action.type) {
 }
 
 
-const initialState: State = {Anonimas: {title: 'Anonimas', tasks: ["uno", "dos"]}}
+const initialState: State = []
   
 
 const BoardContext = React.createContext(initialState);
